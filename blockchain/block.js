@@ -19,6 +19,17 @@ class Block {
   static genesis() {
     return new this('genesis date', 'genesis-prevHash', 'genesis-hash', []);
   }
+
+  static hash(timestamp, prevHash, data) {
+    return SHA256(`${timestamp}${prevHash}${data}`).toString();
+  }
+
+  static mineBlock(prevBlock, data) {
+    const timestamp = Date.now();
+    const prevHash = prevBlock.hash;
+    const hash = Block.hash(timestamp, prevHash, data);
+    return new this(timestamp, prevHash, hash, data);
+  }
 }
 
 module.exports = Block;
