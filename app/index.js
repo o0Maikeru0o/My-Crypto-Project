@@ -14,3 +14,13 @@ app.use(logger('combined'));
 app.listen(HTTP_PORT, () => {
   console.log(`listening on port ${HTTP_PORT}`);
 });
+
+app.get('/blocks', (req, res) => {
+  res.status(200).send(blockchain.chain);
+});
+
+app.post('/mine', (req, res) => {
+  const block = blockchain.addBlock(req.body.data);
+  console.log(`New block added ${block.showBlock()}`);
+  res.status(201).send(blockchain.chain);
+});
