@@ -30,6 +30,11 @@ class Block {
     const hash = Block.hash(timestamp, prevHash, data);
     return new this(timestamp, prevHash, hash, data);
   }
+
+  static getBlockHash(block) {
+    const { timestamp, prevHash, data } = block;
+    return Block.hash(timestamp, prevHash, data);
+  }
 }
 
 module.exports = Block;
