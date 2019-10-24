@@ -30,9 +30,10 @@ class Block {
     return SHA256(`${timestamp}${prevHash}${data}${nonce}${difficulty}`).toString();
   }
 
-  static adjustDifficulty(prevBlock, currentTime) {
+  static adjustDifficulty(prevBlock, currentTime, rate) {
+    const mineRate = rate || MINE_RATE;
     let { difficulty } = prevBlock;
-    difficulty = prevBlock.timestamp + MINE_RATE > currentTime ? difficulty + 1 : difficulty - 1;
+    difficulty = prevBlock.timestamp + mineRate > currentTime ? difficulty + 1 : difficulty - 1;
     return difficulty;
   }
 

@@ -21,4 +21,14 @@ describe('Block', () => {
   it('it calculates a hash to match the difficulty', () => {
     expect(block.hash.substring(0, block.difficulty)).toEqual('0'.repeat(block.difficulty));
   });
+
+  it('increases the difficulty if the time to mine is less than the set rate', () => {
+    expect(Block.adjustDifficulty(block, block.timestamp - 200000, 300000))
+      .toEqual(block.difficulty + 1);
+  });
+
+  it('decreases the difficulty if the time to mine is greater than the set rate', () => {
+    expect(Block.adjustDifficulty(block, block.timestamp + 400000, 300000))
+      .toEqual(block.difficulty - 1);
+  });
 });
