@@ -1,6 +1,5 @@
 const SHA256 = require('crypto-js/sha256');
-const uuidv4 = require('uuid/v4');
-const { MINE_RATE, DIFFICULTY } = require('./config.js');
+const { MINE_RATE, DIFFICULTY } = require('../config.js');
 
 class Block {
   constructor(timestamp, prevHash, hash, data, nonce, difficulty) {
