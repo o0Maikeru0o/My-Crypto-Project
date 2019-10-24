@@ -9,12 +9,12 @@ class P2P_Server {
   constructor(blockchain) {
     this.blockchain = blockchain;
     this.sockets = [];
+    this.wss = new WebSocket.Server({ port: P2P_PORT });
   }
 
 
   listen() {
-    const wss = new WebSocket.Server({ port: P2P_PORT });
-    wss.on('connection', (socket) => { socket.id = uuidv4(); this.connectSocket(socket); });
+    this.wss.on('connection', (socket) => this.connectSocket(socket));
     this.connectToPeers();
     console.log(`Listening for peer to peer connection on port : ${P2P_PORT}`);
   }
@@ -23,7 +23,7 @@ class P2P_Server {
     this.sockets.push(socket);
     console.log(`Connected to socket ${socket.id}`);
     this.messageHandler(socket);
-    socket.send(JSON.stringify(this.blockchain));
+    this.sendChain(socket);
   }
 
   connectToPeers() {
@@ -38,6 +38,18 @@ class P2P_Server {
     socket.on('message', (message) => {
       const data = JSON.parse(message);
       console.log('data', data);
+      this.blockchain.updateChain(data);
+    });
+  }
+
+  sendChain(socket) {
+    console.log('socket---------id', socket.id);
+    socket.send(JSON.stringify(this.blockchain.chain));
+  }
+
+  syncChain() {
+    this.sockets.forEach((socket) => {
+      this.sendChain(socket);
     });
   }
 }
