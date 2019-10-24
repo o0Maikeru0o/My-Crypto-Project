@@ -23,7 +23,7 @@ class Block {
   }
 
   static genesis() {
-    return new this(Date.now(), SHA256(uuidv4()).toString(), SHA256(uuidv4()).toString(), [], 0, DIFFICULTY);
+    return new this('Genesis time', '----', 'ec4a6-a9412', [], 0, DIFFICULTY);
   }
 
   static hash(timestamp, prevHash, data, nonce, difficulty) {
@@ -54,9 +54,9 @@ class Block {
 
   static getBlockHash(block) {
     const {
-      timestamp, prevHash, data, nonce,
+      timestamp, prevHash, data, nonce, difficulty,
     } = block;
-    return Block.hash(timestamp, prevHash, data, nonce);
+    return Block.hash(timestamp, prevHash, data, nonce, difficulty);
   }
 }
 
