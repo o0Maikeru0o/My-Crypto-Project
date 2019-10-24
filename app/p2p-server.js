@@ -43,7 +43,6 @@ class P2P_Server {
   }
 
   sendChain(socket) {
-    console.log('socket---------id', socket.id);
     socket.send(JSON.stringify(this.blockchain.chain));
   }
 

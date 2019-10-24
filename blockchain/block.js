@@ -1,4 +1,5 @@
 const SHA256 = require('crypto-js/sha256');
+const uuidv4 = require('uuid/v4');
 const { MINE_RATE, DIFFICULTY } = require('./config.js');
 
 class Block {
@@ -22,11 +23,11 @@ class Block {
   }
 
   static genesis() {
-    return new this('genesis-date', 'genesis-prevHash', 'genesis-hash', [], 0, DIFFICULTY);
+    return new this(Date.now(), SHA256(uuidv4()).toString(), SHA256(uuidv4()).toString(), [], 0, DIFFICULTY);
   }
 
-  static hash(timestamp, prevHash, data, nonce) {
-    return SHA256(`${timestamp}${prevHash}${data}${nonce}`).toString();
+  static hash(timestamp, prevHash, data, nonce, difficulty) {
+    return SHA256(`${timestamp}${prevHash}${data}${nonce}${difficulty}`).toString();
   }
 
   static adjustDifficulty(prevBlock, currentTime) {
@@ -45,10 +46,10 @@ class Block {
     do {
       nonce += 1;
       timestamp = Date.now();
-      difficulty = this.adjustDifficulty(prevBlock, timestamp);
+      difficulty = Block.adjustDifficulty(prevBlock, timestamp);
       hash = Block.hash(timestamp, prevHash, data, nonce, difficulty);
     } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
-    return new this(timestamp, prevHash, hash, data, nonce);
+    return new this(timestamp, prevHash, hash, data, nonce, difficulty);
   }
 
   static getBlockHash(block) {
