@@ -19,6 +19,7 @@ class Wallet {
   }
 }
 
+console.log(Wallet.sign([15616516516516]));
 module.exports = {
   Wallet,
 };
