@@ -21,22 +21,28 @@ class Transaction {
     return this;
   }
 
-  static newTranscation(senderWallet, recipient, amount) {
-    const transaction = new this();
+  static newTransaction(senderWallet, recipient, amount) {
     if (amount > senderWallet.balance) {
       return console.log(`Amount : ${amount} exceeds the available balance`);
     }
-    return transaction.outputs.push(...[
+    return Transaction.transactionWithOutputs(senderWallet, [
       { amount: senderWallet.balance - amount, address: senderWallet.publicKey },
       { amount, address: recipient },
     ]);
   }
 
+  static transactionWithOutputs(senderWallet, outputs) {
+    const transaction = new this();
+    transaction.outputs.push(...outputs);
+    Transaction.signTransaction(transaction, senderWallet);
+    return transaction;
+  }
+
   static signTransaction(transaction, senderWallet) {
     const signedTransaction = transaction;
     signedTransaction.input = {
-      timestamp: Date.Now(),
-      amount: senderWallet,
+      timestamp: Date.now(),
+      amount: senderWallet.balance,
       address: senderWallet.publicKey,
       signature: senderWallet.sign(ChainUtils.hash(transaction.outputs)),
     };
@@ -52,6 +58,4 @@ class Transaction {
   }
 }
 
-module.exports = {
-  Transaction,
-};
+module.exports = Transaction;

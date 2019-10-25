@@ -1,5 +1,6 @@
 const { INITIAL_BALANCE } = require('../config');
 const ChainUtils = require('./chain-utils.js');
+const Transaction = require('./transaction');
 
 class Wallet {
   constructor() {
@@ -17,9 +18,21 @@ class Wallet {
   sign(dataHash) {
     return this.keyPair.sign(dataHash);
   }
+
+  createTransaction(recipient, amount, transactionPool) {
+    if (amount > this.balance) {
+      return console.log(`Amount : ${amount} exceeds the available balance`);
+    }
+
+    let transaction = transactionPool.checkForExistingTransaction(this.publicKey);
+
+    if (transaction) {
+      Transaction.update(this, recipient, amount);
+    } else {
+      transaction = Transaction.newTransaction(this, recipient, amount);
+      transactionPool.addOrUpdateTransaction(transaction);
+    } return transaction;
+  }
 }
 
-console.log(Wallet.sign([15616516516516]));
-module.exports = {
-  Wallet,
-};
+module.exports = Wallet;

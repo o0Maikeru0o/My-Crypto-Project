@@ -7,6 +7,9 @@
     "test": "jest --watchAll",
     "start": "nodemon app/index.js"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/o0Maikeru0o/My-Blockchain.git"
