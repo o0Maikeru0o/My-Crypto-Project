@@ -69,31 +69,31 @@ describe('Wallet', () => {
         .toEqual(INITIAL_BALANCE - (addBalance * repeatAdd));
     });
 
-    // describe('and the recipient conducts a transaction', () => {
-    //   let subtractBalance;
-    //   let recipientBalance;
+    describe('and the recipient conducts a transaction', () => {
+      let subtractBalance;
+      let recipientBalance;
 
-    //   beforeEach(() => {
-    //     transactionPool = [];
-    //     subtractBalance = 60;
-    //     recipientBalance = wallet.calculateBalance(blockchain);
-    //     wallet.createTransaction(senderWallet.publicKey,
-    //       subtractBalance, blockchain, transactionPool);
-    //     blockchain.addBlock(transactionPool.transactions);
-    //   });
+      beforeEach(() => {
+        transactionPool.clear();
+        subtractBalance = 60;
+        recipientBalance = wallet.calculateBalance(blockchain);
+        wallet.createTransaction(senderWallet.publicKey,
+          subtractBalance, blockchain, transactionPool);
+        blockchain.addBlock(transactionPool.transactions);
+      });
 
-    //   describe('and the sender sends another transaction to the recipient', () => {
-    //     beforeEach(() => {
-    //       transactionPool = [];
-    //       senderWallet.createTransaction(wallet.publicKey, addBalance, blockchain, transactionPool);
-    //       blockchain.addBlock(transactionPool.transactions);
-    //     });
+      describe('and the sender sends another transaction to the recipient', () => {
+        beforeEach(() => {
+          transactionPool.clear();
+          senderWallet.createTransaction(wallet.publicKey, addBalance, blockchain, transactionPool);
+          blockchain.addBlock(transactionPool.transactions);
+        });
 
-    //     it('calculates the recipient\'s balance only using transactions since its most recent one', () => {
-    //       expect(wallet.calculateBalance(blockchain))
-    //         .toEqual(recipientBalance - subtractBalance + addBalance);
-    //     });
-    //   });
-    // });
+        it('calculates the recipient\'s balance only using transactions since its most recent one', () => {
+          expect(wallet.calculateBalance(blockchain))
+            .toEqual(recipientBalance - subtractBalance + addBalance);
+        });
+      });
+    });
   });
 });

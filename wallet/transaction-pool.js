@@ -18,6 +18,10 @@ class TransactionPool {
   checkForExistingTransaction(address) {
     return this.transactions.find((t) => t.input.address === address);
   }
+
+  clear() {
+    this.transactions = [];
+  }
 }
 
 module.exports = TransactionPool;
