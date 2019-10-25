@@ -5,6 +5,7 @@ class TransactionPool {
   }
 
   addOrUpdateTransaction(transaction) {
+    // get the transaction while checking if it exists
     const transactionWithId = this.transactions.find((t) => t.id === transaction.id);
 
     if (transactionWithId) {
@@ -15,7 +16,7 @@ class TransactionPool {
   }
 
   checkForExistingTransaction(address) {
-    return this.transactions.find((t) => t.address === address);
+    return this.transactions.find((t) => t.input.address === address);
   }
 }
 
