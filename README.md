@@ -30,28 +30,37 @@ Run command `NPM test` to begin unit tests with Jest
 ## API End points
 
 // Retreive all blocks in the chain
+
 Get to '/blocks'
 
 // Mine a new block
+
 Post to '/mine'
+
 -Include data in the body object ie. {"data": "some data"}
 
 // Retreive current transations
+
 Get to '/transactions'
 
 // Retreive the public key for a wallet
+
 Get to '/public-key'
 
 GET http://127.0.0.1:3002/public-key
+
 -Response
+
 {
     "publicKey": "040d5bc70a741c5dde2ce5cc7c9a67ff2ffdd32bbf6b9bed5b626fe5d9899f2d6945a4f7ef7934ca1dd18edc5c90c5e170c149174d9596e18c3369c207415b5cd4"
 }
 
 // Create a transaction
 Post '/transact'
-POST http://127.0.0.1:3001/transact
+POST 'http://127.0.0.1:3001/transact'
+
 -body JSON
+
 {"recipient": "040d5bc70a741c5dde2ce5cc7c9a67ff2ffdd32bbf6b9bed5b626fe5d9899f2d6945a4f7ef7934ca1dd18edc5c90c5e170c149174d9596e18c3369c207415b5cd4",
 "amount": 50
 }
@@ -83,8 +92,11 @@ POST http://127.0.0.1:3001/transact
 ]
 
 // Mine all valid transactions in the pool to a new block
+
 Get '/mine-transactions'
+
 -Response
+
 [
     {
         "timestamp": "Genesis time",
