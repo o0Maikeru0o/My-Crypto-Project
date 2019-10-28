@@ -44,12 +44,15 @@ class P2P_Server {
   messageHandler(socket) {
     socket.on('message', (message) => {
       const data = JSON.parse(message);
+      const { type } = data;
       console.log('data', data);
 
-      if (data.type === MESSAGE_TYPE.chain) {
+      if (type === MESSAGE_TYPE.chain) {
         this.blockchain.updateChain(data.chain);
-      } else if (data.type === MESSAGE_TYPE.transaction) {
+      } else if (type === MESSAGE_TYPE.transaction) {
         this.transactionPool.addOrUpdateTransaction(data.transaction);
+      } else if (type === MESSAGE_TYPE.clear_transactions) {
+        this.transactionPool.clear();
       }
     });
   }
@@ -78,6 +81,14 @@ class P2P_Server {
       type: MESSAGE_TYPE.transaction,
       transaction,
     }));
+  }
+
+  broadcastClearTransactions() {
+    this.sockets.forEach((socket) => {
+      socket.send(JSON.stringify({
+        type: MESSAGE_TYPE.clear_transactions,
+      }));
+    });
   }
 }
 module.exports = P2P_Server;

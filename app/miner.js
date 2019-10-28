@@ -1,27 +1,25 @@
-const Blockchain = require('../blockchain/blockchain');
+/* eslint-disable camelcase */
+
 const Wallet = require('../wallet');
 const Transaction = require('../wallet/transaction');
-const TransactionPool = require('../wallet/transaction-pool');
-const P2P_Server = require('./p2p-server.js');
+const MINING_REWARD = require('../config');
 
 class Miner {
-  constructor() {
-    this.transactions = [];
+  constructor(blockchain, transactionPool, wallet, P2P_Server) {
+    this.blockchain = blockchain;
+    this.P2P_Server = P2P_Server;
+    this.wallet = wallet;
+    this.transactionPool = transactionPool;
   }
 
-  validTransactions() {
-    return this.transactions.forEach((transaction) => {
-      const outputTotal = transaction.outputs.reduce((total, output) => total + output.amount, 0);
 
-      if (transaction.input.amount !== outputTotal) {
-        return console.log(`Invalid transaction from ${transaction.input.address}`);
-      }
-
-      if (!Transaction.verifyTransaction(transaction)) {
-        return console.log(`Invalid signature from ${transaction.input.address}`);
-      }
-      return transaction;
-    });
+  static rewardTransaction(minerWallet, blockchainWallet) {
+    return Transaction.transactionWithOutputs(
+      blockchainWallet, [{
+        amount: MINING_REWARD,
+        address: minerWallet.publicKey,
+      }],
+    );
   }
 }
 

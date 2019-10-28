@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 const Transaction = require('../transaction');
 const Wallet = require('../index');
+const MINING_REWARD = require('../../config');
+
 
 describe('Transaction', () => {
   let transaction;
@@ -67,6 +69,17 @@ describe('Transaction', () => {
     it('outputs an amount for the next recipient', () => {
       expect(transaction.outputs.find((output) => output.address === nextRecipient).amount)
         .toEqual(nextAmount);
+    });
+  });
+
+  describe('creating a reward transaction', () => {
+    beforeEach(() => {
+      transaction = Transaction.rewardTransaction(wallet, Wallet.blockchainWallet());
+    });
+
+    it('reward the miners wallet', () => {
+      expect(transaction.outputs.find((output) => output.address === wallet.publicKey).amount)
+        .toEqual(MINING_REWARD);
     });
   });
 });
