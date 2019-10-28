@@ -1,6 +1,6 @@
-const MINE_RATE = 600;
+const MINE_RATE = 60000; // in milliseconds
 const DIFFICULTY = 4;
-const INITIAL_BALANCE = 500;
+const INITIAL_BALANCE = 1000;
 const MINING_REWARD = 50;
 
 module.exports = {

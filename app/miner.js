@@ -1,12 +1,11 @@
 /* eslint-disable camelcase */
-
 const Wallet = require('../wallet');
 const Transaction = require('../wallet/transaction');
 
 class Miner {
-  constructor(blockchain, transactionPool, wallet, P2P_Server) {
+  constructor(blockchain, transactionPool, wallet, p2pServer) {
     this.blockchain = blockchain;
-    this.P2P_Server = P2P_Server;
+    this.p2pServer = p2pServer;
     this.wallet = wallet;
     this.transactionPool = transactionPool;
   }

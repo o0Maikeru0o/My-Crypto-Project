@@ -14,21 +14,17 @@ const HTTP_PORT = process.env.HTTP_PORT || 3001;
 const blockchain = new Blockchain();
 const wallet = new Wallet();
 const transactionPool = new TransactionPool();
+const p2pServer = new P2P_Server(blockchain, transactionPool);
 const miner = new Miner(
   blockchain,
   transactionPool,
   wallet,
-  P2P_Server,
+  p2pServer,
 );
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('combined'));
-app.listen(HTTP_PORT, () => {
-  console.log(`listening on port ${HTTP_PORT}`);
-});
-const p2pServer = new P2P_Server(blockchain, transactionPool);
-p2pServer.listen();
 
 // Retreive all blocks in the chain
 app.get('/blocks', (req, res) => {
@@ -72,3 +68,11 @@ app.get('/mine-transactions', (req, res) => {
   console.log(`New block added: ${block.toString()}`);
   res.redirect('/blocks');
 });
+
+// app server configurations
+app.listen(HTTP_PORT, () => {
+  console.log(`listening on port ${HTTP_PORT}`);
+});
+
+// p2p server configuration
+p2pServer.listen();
