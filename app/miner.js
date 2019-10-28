@@ -2,7 +2,6 @@
 
 const Wallet = require('../wallet');
 const Transaction = require('../wallet/transaction');
-const MINING_REWARD = require('../config');
 
 class Miner {
   constructor(blockchain, transactionPool, wallet, P2P_Server) {
@@ -12,14 +11,32 @@ class Miner {
     this.transactionPool = transactionPool;
   }
 
+  mine() {
+    /**
+     * 1. grab transaction from the pool that are valid
+     * 2. create a block using the transactions
+     * 3. synchronize the chain and include new block
+     * 4. clear the transaction pool to remove confirmed transactions
+     */
 
-  static rewardTransaction(minerWallet, blockchainWallet) {
-    return Transaction.transactionWithOutputs(
-      blockchainWallet, [{
-        amount: MINING_REWARD,
-        address: minerWallet.publicKey,
-      }],
-    );
+    const validTransactions = this.transactionPool.validTransactions();
+
+    // include reward for the miner in the valid transactions array
+    validTransactions.push(Transaction.rewardTransaction(this.wallet, Wallet.blockchainWallet()));
+
+    // create a block consisting of the valid transaction
+    const block = this.blockchain.addBlock(validTransactions);
+
+    // synchronize the chains in the p2p server
+    this.p2pServer.syncChain();
+
+    // clear the transaction pool
+    this.transactionPool.clear();
+
+    // broadcast every miner to clear their pool
+    this.p2pServer.broadcastClearTransactions();
+
+    return block;
   }
 }
 

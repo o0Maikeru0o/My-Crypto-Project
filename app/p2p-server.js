@@ -19,13 +19,14 @@ class P2P_Server {
     this.wss = new WebSocket.Server({ port: P2P_PORT });
   }
 
-
+  // Listen for all incoming connections
   listen() {
     this.wss.on('connection', (socket) => this.connectSocket(socket));
     this.connectToPeers();
     console.log(`Listening for peer to peer connection on port : ${P2P_PORT}`);
   }
 
+  // Connect sockets, assign them to message hanlder and send current chain
   connectSocket(socket) {
     this.sockets.push(socket);
     console.log(`Connected to socket ${socket.id}`);
@@ -33,6 +34,7 @@ class P2P_Server {
     this.sendChain(socket);
   }
 
+  // Assign a new socket for each new peer
   connectToPeers() {
     peers.forEach((peer) => {
       const socket = new WebSocket(peer);
@@ -41,6 +43,7 @@ class P2P_Server {
     });
   }
 
+  // Choose which action to take based upon the message type
   messageHandler(socket) {
     socket.on('message', (message) => {
       const data = JSON.parse(message);
@@ -64,6 +67,7 @@ class P2P_Server {
     }));
   }
 
+  // Sync chain whenever a new block is added
   syncChain() {
     this.sockets.forEach((socket) => {
       this.sendChain(socket);

@@ -30,10 +30,12 @@ app.listen(HTTP_PORT, () => {
 const p2pServer = new P2P_Server(blockchain, transactionPool);
 p2pServer.listen();
 
+// Retreive all blocks in the chain
 app.get('/blocks', (req, res) => {
   res.status(200).send(blockchain.chain);
 });
 
+// Mine a new block
 app.post('/mine', (req, res) => {
   const block = blockchain.addBlock(req.body.data);
   console.log(`New block added ${block.showBlock()}`);
@@ -41,10 +43,12 @@ app.post('/mine', (req, res) => {
   p2pServer.syncChain();
 });
 
+// Retreive current transations
 app.get('/transactions', (req, res) => {
   res.json(transactionPool.transactions);
 });
 
+// Create a transaction
 app.post('/transact', (req, res) => {
   const { recipient, amount } = req.body;
   const transaction = wallet.createTransaction(
@@ -57,10 +61,12 @@ app.post('/transact', (req, res) => {
   res.redirect('/transactions');
 });
 
+// Retreive the public key for a wallet
 app.get('/public-key', (req, res) => {
   res.json({ publicKey: wallet.publicKey });
 });
 
+// Add all valid transactions in the pool to a new block
 app.get('/mine-transactions', (req, res) => {
   const block = miner.mine();
   console.log(`New block added: ${block.toString()}`);
